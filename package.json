@@ -20,7 +20,7 @@
   },
   "scripts": {
     "lint": "tslint  --project tsconfig.json -t codeFrame 'src/**/*.ts' 'test/**/*.ts'",
-    "lint-staged": "lintstaged",
+    "lint:staged": "lint-staged",
     "prebuild": "rimraf dist",
     "build": "tsc --module commonjs && rollup -c rollup.config.ts && typedoc --out docs --target es6 --theme minimal --mode file src",
     "start": "rollup -c rollup.config.ts -w",
@@ -34,14 +34,15 @@
     "semantic-release-prepare": "ts-node tools/semantic-release-prepare"
   },
   "lint-staged": {
-    "{src,test}/**/*.ts": [
+    "{src,test}/**/*.{ts, tsx}": [
       "prettier --write",
-      "git add"
+      "git add",
+      "jest --bail --findRelatedTests"
     ]
   },
   "husky": {
     "hooks": {
-      "pre-commit": "npm run lint-staged",
+      "pre-commit": "npm run lint:staged",
       "pre-push": "npm test"
     }
   },
@@ -108,7 +109,7 @@
     "cz-conventional-changelog": "^2.1.0",
     "enzyme": "^3.7.0",
     "enzyme-adapter-react-16": "^1.6.0",
-    "husky": "^1.0.1",
+    "husky": "^1.1.2",
     "jest": "^23.6.0",
     "jest-config": "^23.6.0",
     "lint-staged": "^7.3.0",
