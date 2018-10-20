@@ -1,4 +1,4 @@
-import { ShowToastOptions } from '../toast-options'
+import { IShowToastOptions } from '../toast-options'
 
 export enum EventType {
   Show = 0,
@@ -6,5 +6,5 @@ export enum EventType {
 }
 
 export type ShowEventPayload = {
-  options: ShowToastOptions
+  options: IShowToastOptions
 }
