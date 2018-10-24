@@ -36,13 +36,12 @@
   "lint-staged": {
     "{src,test}/**/*.{ts, tsx}": [
       "prettier --write",
-      "git add",
-      "jest --bail --findRelatedTests"
+      "git add"
     ]
   },
   "husky": {
     "hooks": {
-      "pre-commit": "npm run lint:staged",
+      "pre-commit": "npm run lint:staged && npm run test",
       "pre-push": "npm test"
     }
   },
@@ -56,7 +55,7 @@
       "<rootDir>/test/setupTest.ts"
     ],
     "transform": {
-      ".(ts|tsx)": "<rootDir>/node_modules/ts-jest/preprocessor.js"
+      ".(ts|tsx)": "ts-jest"
     },
     "testEnvironment": "jsdom",
     "testRegex": "(/__tests__/.*|\\.(test|spec))\\.(ts|tsx|js)$",
