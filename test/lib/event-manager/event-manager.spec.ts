@@ -12,10 +12,11 @@ type testEventPayload = {
 const noop = () => {}
 
 describe('EventManager', () => {
-  let eventManager: IEventManager
+  let eventManager: EventManager
 
   beforeEach(() => {
-    eventManager = new EventManager()
+    eventManager = EventManager.getInstance()
+    eventManager.clear()
   })
 
   it('Should be able to bind an event', () => {

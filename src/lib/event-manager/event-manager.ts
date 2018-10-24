@@ -7,7 +7,19 @@ export interface IEventManager {
 }
 
 class EventManager implements IEventManager {
+  private static instance: EventManager
+
   private list = new Map<EventType, ((arg: any) => void)[]>()
+
+  private constructor() {}
+
+  static getInstance() {
+    if (!EventManager.instance) {
+      EventManager.instance = new EventManager()
+    }
+
+    return EventManager.instance
+  }
 
   emit<T>(eventType: EventType, eventPayload: T) {
     if (!this.list.has(eventType)) {
@@ -39,6 +51,11 @@ class EventManager implements IEventManager {
 
   off(eventType: EventType) {
     this.list.delete(eventType)
+    return this
+  }
+
+  clear() {
+    this.list.clear()
     return this
   }
 }
