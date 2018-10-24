@@ -25,6 +25,12 @@ class ToastService {
 
   private onContainerDidMount = () => {
     this.isContainerMounted = true
+
+    this.queue.forEach(showPayload => {
+      this.eventManager.emit<IShowToastPayload>(EventType.Show, showPayload)
+    })
+
+    this.queue = []
   }
 
   private onContainerDidUnmount = () => {

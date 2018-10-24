@@ -22,7 +22,7 @@ describe('A <ToastContainer />', () => {
   it('should emit ToastContainerMounted event on mount', () => {
     const eventManagerMock = new EventManagerMock()
     const ToastContainerComponent = getToastContainerComponent(eventManagerMock)
-    const wrapper = mount(<ToastContainerComponent />)
+    mount(<ToastContainerComponent />)
     expect(eventManagerMock.emit).toHaveBeenCalledTimes(1)
   })
 })

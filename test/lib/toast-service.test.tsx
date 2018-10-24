@@ -29,8 +29,10 @@ describe('ToastService', () => {
   it('should emit show event if the toast container is mounted', () => {
     let EventManagerMock = jest.fn<IEventManager>(() => ({
       emit: jest.fn(),
-      on: jest.fn().mockImplementationOnce((_: EventType, callback) => {
-        callback()
+      on: jest.fn().mockImplementation((eventType: EventType, callback) => {
+        if (eventType === EventType.ContainerDidMount) {
+          callback()
+        }
       }),
       off: jest.fn()
     }))
@@ -47,5 +49,60 @@ describe('ToastService', () => {
       })
     )
     expect(toastService.queue.length).toBe(0)
+  })
+
+  it('should dequeue all show events as soon as toast container is mounted', () => {
+    let containerDidMountCallback: any = undefined
+    let EventManagerMock = jest.fn<IEventManager>(() => ({
+      emit: jest.fn(),
+      on: jest.fn().mockImplementation((eventType: EventType, cb) => {
+        if (eventType === EventType.ContainerDidMount) {
+          containerDidMountCallback = cb
+        }
+      }),
+      off: jest.fn()
+    }))
+
+    eventManagerMock = new EventManagerMock()
+    toastService = new ToastService(eventManagerMock)
+    toastService.show(() => <span>lorem 1 </span>, { autoClose: false })
+    toastService.show(() => <span>lorem 2 </span>, { autoClose: false })
+
+    expect(eventManagerMock.emit).not.toHaveBeenCalled()
+    expect(toastService.queue.length).toBe(2)
+
+    containerDidMountCallback()
+
+    expect(eventManagerMock.emit).toHaveBeenCalledTimes(2)
+    expect(toastService.queue.length).toBe(0)
+  })
+
+  it('should enqueue all new show requests events as soon as toast container is unmounted', () => {
+    let containerDidUnmountCallback: any = undefined
+    let EventManagerMock = jest.fn<IEventManager>(() => ({
+      emit: jest.fn(),
+      on: jest.fn().mockImplementation((eventType: EventType, cb) => {
+        if (eventType === EventType.ContainerDidUnmount) {
+          containerDidUnmountCallback = cb
+        } else if (eventType === EventType.ContainerDidMount) {
+          cb()
+        }
+      }),
+      off: jest.fn()
+    }))
+
+    eventManagerMock = new EventManagerMock()
+    toastService = new ToastService(eventManagerMock)
+    toastService.show(() => <span>lorem 1 </span>, { autoClose: false })
+
+    expect(eventManagerMock.emit).toHaveBeenCalledTimes(1)
+    expect(toastService.queue.length).toBe(0)
+
+    containerDidUnmountCallback()
+
+    toastService.show(() => <span>lorem 2 </span>, { autoClose: false })
+    toastService.show(() => <span>lorem 3 </span>, { autoClose: false })
+
+    expect(toastService.queue.length).toBe(2)
   })
 })
