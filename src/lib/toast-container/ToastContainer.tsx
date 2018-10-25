@@ -1,13 +1,17 @@
 import * as React from 'react'
 import withEventManager, { IWithEventManagerInjectedProps } from '../hoc/withEventManager'
-import { EventType, IShowToastPayload } from '../events/events'
+import { EventType, IShowToastPayload, IHideToastPayload } from '../events/events'
 import { ToastFactoryFunction } from '../toast.model'
+import Toast from '../toast/Toast'
+import { IToastOptions } from '../toast-options'
 
 export interface IToastContainerProps extends IWithEventManagerInjectedProps {}
 
 interface IToastContainerState {
   toastIds: number[]
   toasts: { [toastId: number]: ToastFactoryFunction }
+  options: { [toastId: number]: IToastOptions }
+  close: { [toastId: number]: () => void }
 }
 
 class ToastContainer extends React.Component<IToastContainerProps, IToastContainerState> {
@@ -16,7 +20,9 @@ class ToastContainer extends React.Component<IToastContainerProps, IToastContain
 
     this.state = {
       toastIds: [],
-      toasts: {}
+      toasts: {},
+      options: {},
+      close: {}
     }
   }
 
@@ -37,16 +43,48 @@ class ToastContainer extends React.Component<IToastContainerProps, IToastContain
     this.setState(state => ({
       ...state,
       toastIds: [...state.toastIds, toastId],
-      toasts: { ...state.toasts, [toastId]: content }
+      toasts: { ...state.toasts, [toastId]: content },
+      options: { ...state.options, [toastId]: options },
+      close: {
+        ...state.close,
+        [toastId]: () => {
+          this.onHideToast({ toastId })
+        }
+      }
     }))
   }
 
+  onHideToast(hideEventPayload: IHideToastPayload) {
+    const { toastId } = hideEventPayload
+    this.setState(state => {
+      const { toastIds, toasts, options, close } = state
+      const { [toastId]: toast, ...restToasts } = toasts
+      const { [toastId]: option, ...restOptions } = options
+      const { [toastId]: closeFn, ...restClose } = close
+
+      return {
+        ...state,
+        toastIds: toastIds.filter(tId => tId !== toastId),
+        toasts: restToasts,
+        options: restOptions,
+        close: restClose
+      }
+    })
+  }
+
   render() {
-    const { toastIds, toasts } = this.state
+    const { toastIds, toasts, options, close } = this.state
+
     return (
       <div>
         {toastIds.map(toastId => {
-          return <React.Fragment key={toastId}>{toasts[toastId]()}</React.Fragment>
+          const toastOptions = options[toastId]
+          const closeToast = close[toastId]
+          return (
+            <Toast key={toastId} autoClose={toastOptions.autoClose} close={closeToast}>
+              {toasts[toastId]}
+            </Toast>
+          )
         })}
       </div>
     )

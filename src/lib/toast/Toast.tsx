@@ -1,13 +1,11 @@
 import * as React from 'react'
-
-export interface InjectedToastProps {
-  close: () => void
-}
+import { IRenderProps } from '../toast.model'
 
 export interface IToastProps {
   autoClose: false | number
+  close: () => void
   onOpen?: () => void
-  children: (props: InjectedToastProps) => JSX.Element
+  children: (props: IRenderProps) => JSX.Element
 }
 
 class Toast extends React.Component<IToastProps> {
@@ -15,15 +13,13 @@ class Toast extends React.Component<IToastProps> {
     if (this.props.onOpen !== undefined) {
       this.props.onOpen()
     }
-
-    
   }
 
   private getRenderProps = () => {
     return {
       autoClose: this.props.autoClose,
       // tslint:disable-next-line:no-empty
-      close: () => {}
+      close: this.props.close
     }
   }
 

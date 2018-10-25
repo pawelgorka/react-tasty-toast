@@ -51,4 +51,30 @@ describe('A <ToastContainer />', () => {
 
     expect(wrapper.text()).toContain('lorem 1')
   })
+
+  it('should pass close callback as a render prop and this callback should remove Toast', () => {
+    const ToastContainerComponent = getToastContainerComponent(eventManagerMock)
+    const wrapper = mount(<ToastContainerComponent />)
+
+    onShowToastCallback({
+      content: ({ close }) => (
+        <div>
+          <button className="close-button" onClick={close}>
+            click to close toast
+          </button>
+        </div>
+      ),
+      options: { autoClose: false, toastId: 1 }
+    })
+
+    wrapper.update()
+
+    const button = wrapper.find('.close-button')
+    expect(button.length).toEqual(1)
+    button.simulate('click')
+
+    wrapper.update()
+
+    expect(wrapper.text()).not.toContain('click to close toast')
+  })
 })

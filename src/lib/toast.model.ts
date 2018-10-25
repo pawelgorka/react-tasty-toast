@@ -1,3 +1,8 @@
 import * as React from 'react'
 
-export type ToastFactoryFunction = () => React.ReactElement<any>
+export interface IRenderProps {
+  close: () => void
+  autoClose: false | number
+}
+
+export type ToastFactoryFunction = (props: IRenderProps) => React.ReactElement<any>

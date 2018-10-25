@@ -3,11 +3,12 @@ import * as React from 'react'
 import { mount } from 'enzyme'
 
 import { Omit } from '../../../src/lib/helpers/ts-helpers'
-import Toast, { InjectedToastProps, IToastProps } from '../../../src/lib/toast/Toast'
+import { IRenderProps } from '../../../src/lib/toast.model'
+import Toast, { IToastProps } from '../../../src/lib/toast/Toast'
 
 const getToastComponent = (
   toastProps: Partial<Omit<IToastProps, 'children'>>,
-  renderProp?: (props: InjectedToastProps) => JSX.Element
+  renderProp?: (props: IRenderProps) => JSX.Element
 ) => {
   const defaultProps: Omit<IToastProps, 'children'> = {
     autoClose: false

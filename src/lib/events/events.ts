@@ -14,3 +14,7 @@ export interface IShowToastPayload {
     toastId: number
   }
 }
+
+export interface IHideToastPayload {
+  toastId: number
+}
