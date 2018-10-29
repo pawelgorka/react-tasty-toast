@@ -11,7 +11,10 @@ const getToastComponent = (
   renderProp?: (props: IRenderProps) => JSX.Element
 ) => {
   const defaultProps: Omit<IToastProps, 'children'> = {
-    autoClose: false
+    autoClose: false,
+    close: () => {
+      return
+    }
   }
 
   const props: Omit<IToastProps, 'children'> = {
