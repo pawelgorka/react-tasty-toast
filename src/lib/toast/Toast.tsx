@@ -15,16 +15,14 @@ class Toast extends React.Component<IToastProps> {
     }
   }
 
-  private getRenderProps = () => {
-    return {
-      autoClose: this.props.autoClose,
-      // tslint:disable-next-line:no-empty
-      close: this.props.close
-    }
-  }
+  private getRenderProps = (): IRenderProps => ({
+    autoClose: false,
+    close: this.props.close
+  })
 
   render() {
-    return this.props.children(this.getRenderProps())
+    const renderProps = this.getRenderProps()
+    return this.props.children(renderProps)
   }
 }
 
