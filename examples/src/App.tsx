@@ -1,11 +1,11 @@
 import * as React from 'react'
 
-import { TastyToastContainer, tastyToastService } from 'react-tasty-toast'
+import { ToastContainer, toastService } from 'react-tasty-toast'
 import ExampleToast from './example-toast/ExampleToast'
 
 class App extends React.Component {
   public handleShowToastButtonClick = () => {
-    tastyToastService.show(({ close }) => <ExampleToast onClose={close} />, { autoClose: false })
+    toastService.show(({ close }) => <ExampleToast onClose={close} />, { autoClose: false })
   }
 
   public render() {
@@ -17,7 +17,7 @@ class App extends React.Component {
         <p>
           <button onClick={this.handleShowToastButtonClick}>showToast</button>
         </p>
-        <TastyToastContainer />
+        <ToastContainer />
       </div>
     )
   }

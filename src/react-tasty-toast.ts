@@ -2,6 +2,7 @@
 // import "core-js/fn/array.find"
 // ...
 
-import ToastService from './lib/toast-service'
+import toastService from './lib/toast-service'
+import ToastContainer from './lib/toast-container/ToastContainer'
 
-export default ToastService
+export { toastService, ToastContainer }
