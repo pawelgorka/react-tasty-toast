@@ -72,11 +72,19 @@ class ToastContainer extends React.Component<IToastContainerProps, IToastContain
     })
   }
 
+  getToastContainerStyles = (): React.CSSProperties => {
+    return {
+      position: 'fixed',
+      top: 0,
+      right: 0
+    }
+  }
+
   render() {
     const { toastIds, toasts, options, close } = this.state
 
     return (
-      <div>
+      <div style={this.getToastContainerStyles()}>
         {toastIds.map(toastId => {
           const toastOptions = options[toastId]
           const closeToast = close[toastId]

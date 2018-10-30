@@ -20,16 +20,8 @@ class Toast extends React.Component<IToastProps> {
     close: this.props.close
   })
 
-  getWrapperStyles = (): React.CSSProperties => {
-    return {
-      position: 'fixed',
-      right: 0,
-      top: 0
-    }
-  }
-
   render() {
-    return <div style={this.getWrapperStyles()}>{this.props.children(this.getRenderProps())}</div>
+    return <div>{this.props.children(this.getRenderProps())}</div>
   }
 }
 
