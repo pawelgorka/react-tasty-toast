@@ -8,12 +8,6 @@ class ToastOptionsBuilder extends Builder<IToastOptions> {
     this.with('autoClose', false)
     this.with('pauseOnHover', false)
   }
-
-  public build = (): IToastOptions => {
-    const toastOptions = super.build()
-    // check it toast options are valid
-    return toastOptions
-  }
 }
 
 export default ToastOptionsBuilder

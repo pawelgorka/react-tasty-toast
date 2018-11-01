@@ -1,18 +1,48 @@
-export interface BuilderInterface<T> {
-  with<K extends keyof T>(key: K, value: T[K]): BuilderInterface<T>
-  build(): T
-}
+const deepCopyObject = <T extends {}>(obj: T) => {
+  let dist: any = {}
 
-const deepCopy = <T>(object: T): T => {
-  try {
-    return JSON.parse(JSON.stringify(object))
-  } catch (error) {
-    throw new Error('invalid argument could not preform deep copy on' + object)
+  for (let key in obj) {
+    if (!obj.hasOwnProperty(key)) {
+      continue
+    }
+
+    const type = typeof obj[key]
+
+    switch (type) {
+      case 'function':
+        dist[key] = obj[key]
+        break
+      case 'boolean':
+        dist[key] = obj[key]
+        break
+      case 'number':
+        dist[key] = obj[key]
+        break
+      case 'string':
+        dist[key] = obj[key]
+        break
+      case 'symbol':
+        dist[key] = obj[key]
+        break
+      case 'undefined':
+        dist[key] = obj[key]
+        break
+      case 'object':
+        dist[key] = deepCopyObject(obj[key])
+        break
+    }
   }
+
+  return dist as T
 }
 
-abstract class Builder<T> implements BuilderInterface<T> {
-  private properties: T = {} as T
+export interface BuilderInterface<T> {
+  with: <K extends keyof T>(key: K, value: T[K]) => BuilderInterface<T>
+  build: () => T
+}
+
+class Builder<T> implements BuilderInterface<T> {
+  properties: T = {} as T
 
   public with = <K extends keyof T>(key: K, value: T[K]): BuilderInterface<T> => {
     this.properties[key] = value
@@ -20,8 +50,12 @@ abstract class Builder<T> implements BuilderInterface<T> {
     return this
   }
 
-  public build(): T {
-    return deepCopy(this.properties)
+  public build = (): T => {
+    let toastOptions: Partial<T> = {}
+
+    toastOptions = deepCopyObject(this.properties)
+
+    return toastOptions as T
   }
 }
 

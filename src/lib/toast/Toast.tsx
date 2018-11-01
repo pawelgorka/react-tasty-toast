@@ -37,6 +37,7 @@ class Toast extends React.Component<IToastProps, IToastState> {
   private getRenderProps = (): IRenderProps => ({
     autoClose: this.props.autoClose,
     close: this.props.close,
+    isRunning: this.props.autoClose ? this.state.isRunning : null,
     pauseOnHover: this.props.pauseOnHover
   })
 
