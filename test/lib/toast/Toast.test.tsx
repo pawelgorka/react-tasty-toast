@@ -5,6 +5,15 @@ import { mount } from 'enzyme'
 import { Omit } from '../../../src/lib/helpers/ts-helpers'
 import { IRenderProps } from '../../../src/lib/toast.model'
 import Toast, { IToastProps } from '../../../src/lib/toast/Toast'
+import { fireAnimationEndEvent } from '../../test-helpers'
+
+const wait = (ms: number) => {
+  return new Promise(resolve => {
+    setTimeout(() => {
+      resolve()
+    }, ms)
+  })
+}
 
 const getToastComponent = (
   toastProps: Partial<Omit<IToastProps, 'children'>>,
@@ -18,19 +27,11 @@ const getToastComponent = (
   }
 
   const props: Omit<IToastProps, 'children'> = {
-    ...toastProps,
-    ...defaultProps
+    ...defaultProps,
+    ...toastProps
   }
 
-  return (
-    <Toast {...props}>
-      {renderProp === undefined
-        ? () => {
-            return <span />
-          }
-        : renderProp}
-    </Toast>
-  )
+  return <Toast {...props}>{renderProp === undefined ? () => <span /> : renderProp}</Toast>
 }
 
 describe('A <Toast />', () => {
@@ -47,6 +48,14 @@ describe('A <Toast />', () => {
   it('should call onOpen callback when component mounts', () => {
     const cb = jest.fn()
     mount(getToastComponent({ onOpen: cb }))
+    expect(cb).toHaveBeenCalledTimes(1)
+  })
+
+  it('should call close after toast autoClose duration elapses', async () => {
+    const cb = jest.fn()
+    const wrapper = mount(getToastComponent({ close: cb, autoClose: 200 }))
+    expect(cb).not.toHaveBeenCalled()
+    fireAnimationEndEvent(wrapper)
     expect(cb).toHaveBeenCalledTimes(1)
   })
 })

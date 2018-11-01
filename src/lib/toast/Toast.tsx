@@ -1,5 +1,6 @@
 import * as React from 'react'
 import { IRenderProps } from '../toast.model'
+import AutoClose from './AutoClose'
 
 export interface IToastProps {
   autoClose: false | number
@@ -16,12 +17,20 @@ class Toast extends React.Component<IToastProps> {
   }
 
   private getRenderProps = (): IRenderProps => ({
-    autoClose: false,
+    autoClose: this.props.autoClose,
     close: this.props.close
   })
 
   render() {
-    return <div>{this.props.children(this.getRenderProps())}</div>
+    const renderProps = this.getRenderProps()
+    const { autoClose, close } = renderProps
+
+    return (
+      <React.Fragment>
+        {this.props.children(this.getRenderProps())}
+        {autoClose !== false && <AutoClose delay={autoClose} isRunning={true} close={close} />}
+      </React.Fragment>
+    )
   }
 }
 
