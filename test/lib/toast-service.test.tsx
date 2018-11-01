@@ -3,12 +3,16 @@ import * as React from 'react'
 import { ToastService } from '../../src/lib/toast-service'
 import { IEventManager } from '../../src/lib/event-manager/event-manager'
 import { EventType } from '../../src/lib/events/events'
+import ToastOptionsBuilder from './toast-options.builder'
 
 describe('ToastService', () => {
   let toastService: ToastService
   let eventManagerMock: IEventManager
+  let optionsBuilder: ToastOptionsBuilder
 
   beforeEach(() => {
+    optionsBuilder = new ToastOptionsBuilder()
+
     let EventManagerMock = jest.fn<IEventManager>(() => ({
       emit: jest.fn(),
       on: jest.fn(),
@@ -21,7 +25,7 @@ describe('ToastService', () => {
   })
 
   it('should schedule show event if the toast container is not mounted yet', () => {
-    toastService.show(() => <span>lorem</span>, { autoClose: false })
+    toastService.show(() => <span>lorem</span>, optionsBuilder.with('autoClose', false).build())
     expect(eventManagerMock.emit).not.toHaveBeenCalled()
     expect(toastService.queue.length).toBe(1)
   })
@@ -39,7 +43,7 @@ describe('ToastService', () => {
 
     eventManagerMock = new EventManagerMock()
     toastService = new ToastService(eventManagerMock)
-    toastService.show(() => <span>lorem</span>, { autoClose: false })
+    toastService.show(() => <span>lorem</span>, optionsBuilder.with('autoClose', false).build())
 
     expect(eventManagerMock.emit).toHaveBeenNthCalledWith(
       1,
@@ -65,8 +69,8 @@ describe('ToastService', () => {
 
     eventManagerMock = new EventManagerMock()
     toastService = new ToastService(eventManagerMock)
-    toastService.show(() => <span>lorem 1 </span>, { autoClose: false })
-    toastService.show(() => <span>lorem 2 </span>, { autoClose: false })
+    toastService.show(() => <span>lorem 1 </span>, optionsBuilder.with('autoClose', false).build())
+    toastService.show(() => <span>lorem 2 </span>, optionsBuilder.with('autoClose', false).build())
 
     expect(eventManagerMock.emit).not.toHaveBeenCalled()
     expect(toastService.queue.length).toBe(2)
@@ -93,15 +97,15 @@ describe('ToastService', () => {
 
     eventManagerMock = new EventManagerMock()
     toastService = new ToastService(eventManagerMock)
-    toastService.show(() => <span>lorem 1 </span>, { autoClose: false })
+    toastService.show(() => <span>lorem 1 </span>, optionsBuilder.with('autoClose', false).build())
 
     expect(eventManagerMock.emit).toHaveBeenCalledTimes(1)
     expect(toastService.queue.length).toBe(0)
 
     containerDidUnmountCallback()
 
-    toastService.show(() => <span>lorem 2 </span>, { autoClose: false })
-    toastService.show(() => <span>lorem 3 </span>, { autoClose: false })
+    toastService.show(() => <span>lorem 2 </span>, optionsBuilder.with('autoClose', false).build())
+    toastService.show(() => <span>lorem 3 </span>, optionsBuilder.with('autoClose', false).build())
 
     expect(toastService.queue.length).toBe(2)
   })

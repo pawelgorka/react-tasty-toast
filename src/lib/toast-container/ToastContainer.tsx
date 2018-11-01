@@ -89,7 +89,13 @@ class ToastContainer extends React.Component<IToastContainerProps, IToastContain
           const toastOptions = options[toastId]
           const closeToast = close[toastId]
           return (
-            <Toast key={toastId} autoClose={toastOptions.autoClose} close={closeToast}>
+            <Toast
+              key={toastId}
+              autoClose={toastOptions.autoClose}
+              pauseOnHover={toastOptions.pauseOnHover}
+              close={closeToast}
+
+             >
               {toasts[toastId]}
             </Toast>
           )

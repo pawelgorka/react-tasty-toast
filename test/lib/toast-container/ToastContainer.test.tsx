@@ -4,6 +4,7 @@ import { ToastContainer } from '../../../src/lib/toast-container/ToastContainer'
 import { IEventManager } from '../../../src/lib/event-manager/event-manager'
 import withEventManager from '../../../src/lib/hoc/withEventManager'
 import { EventType, IShowToastPayload } from '../../../src/lib/events/events'
+import ToastOptionsBuilder from '../toast-options.builder'
 
 const getToastContainerComponent = (eventManager: IEventManager) => {
   return withEventManager(ToastContainer, eventManager)
@@ -15,6 +16,7 @@ describe('A <ToastContainer />', () => {
   let onMountCallback: () => void
   let onUnmountCallback: () => void
   let onShowToastCallback: (showToastPayload: IShowToastPayload) => void
+  let optionsBuilder: ToastOptionsBuilder
 
   beforeEach(() => {
     EventManagerMock = jest.fn<IEventManager>(() => ({
@@ -32,6 +34,8 @@ describe('A <ToastContainer />', () => {
     }))
 
     eventManagerMock = new EventManagerMock()
+
+    optionsBuilder = new ToastOptionsBuilder()
   })
 
   it('should emit ToastContainerMounted event on mount', () => {
@@ -46,7 +50,7 @@ describe('A <ToastContainer />', () => {
 
     onShowToastCallback({
       content: () => <span>lorem 1</span>,
-      options: { autoClose: false, toastId: 1 }
+      options: { autoClose: false, toastId: 1, pauseOnHover: false }
     })
 
     expect(wrapper.text()).toContain('lorem 1')
@@ -64,7 +68,7 @@ describe('A <ToastContainer />', () => {
           </button>
         </div>
       ),
-      options: { autoClose: false, toastId: 1 }
+      options: { ...optionsBuilder.with('autoClose', false).build(), toastId: 1 }
     })
 
     wrapper.update()

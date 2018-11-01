@@ -21,6 +21,10 @@ const getToastComponent = (
 ) => {
   const defaultProps: Omit<IToastProps, 'children'> = {
     autoClose: false,
+    pauseOnHover: false,
+    onOpen: () => {
+      return
+    },
     close: () => {
       return
     }

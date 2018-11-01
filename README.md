@@ -2,7 +2,13 @@
 
 [x] - show toast programmatically
 
-[ ] - auto dismiss toast
+[x] - auto dismiss toast
+
+[x] - pause on hover
+
+[ ] - render props for users custom components ( users progress bar ) - is playing - duration
+
+[ ] - close on click
 
 [ ] - working out of the box (pass default css class name that would be provided by default but not included by default)
 
