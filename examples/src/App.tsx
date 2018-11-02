@@ -25,6 +25,7 @@ class App extends React.Component<IAppProps, IAppState> {
 
     const toastOptions: IShowToastOptions = {
       autoClose: autoClose === 0 ? false : autoClose,
+      closeOnClick: true,
       pauseOnHover: true
     }
 

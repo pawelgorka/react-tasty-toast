@@ -13,6 +13,7 @@ const getToastComponent = (
 ) => {
   const defaultProps: Omit<IToastProps, 'children'> = {
     autoClose: false,
+    closeOnClick: false,
     pauseOnHover: false,
     onOpen: () => {
       return
@@ -31,10 +32,15 @@ const getToastComponent = (
 }
 
 describe('A <Toast />', () => {
-  let props: Builder<IToastProps>
+  let props: Builder<Omit<IToastProps, 'children'>>
 
   beforeEach(() => {
-    props = new Builder<IToastProps>()
+    props = new Builder<Omit<IToastProps, 'children'>>()
+
+    props
+      .with('autoClose', false)
+      .with('closeOnClick', false)
+      .with('pauseOnHover', false)
   })
 
   it('should pass props to render prop function', () => {
@@ -86,5 +92,28 @@ describe('A <Toast />', () => {
     expect(wrapper.html()).toContain('is running: true')
     toast.simulate('mouseEnter')
     expect(wrapper.html()).toContain('is running: false')
+  })
+
+  it('should close toast when user clicks on toast', async () => {
+    const cb = jest.fn()
+    const wrapper = mount(
+      getToastComponent(
+        props
+          .with('closeOnClick', true)
+          .with('close', cb)
+          .build(),
+        () => {
+          return <span>toast content</span>
+        }
+      )
+    )
+
+    const toast = wrapper.find('div').first()
+    expect(toast.exists).toBeTruthy()
+    expect(wrapper.html()).toContain('toast content')
+    expect(cb).not.toHaveBeenCalled()
+
+    toast.simulate('click')
+    expect(cb).toHaveBeenCalledTimes(1)
   })
 })

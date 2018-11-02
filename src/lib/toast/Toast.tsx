@@ -5,6 +5,7 @@ import AutoClose from './AutoClose'
 export interface IToastProps {
   autoClose: false | number
   pauseOnHover: boolean
+  closeOnClick: boolean
   close: () => void
   onOpen?: () => void
   children: (props: IRenderProps) => JSX.Element
@@ -15,6 +16,7 @@ interface IToastState {
 }
 
 interface IToastContainerProps {
+  onClick?: () => void
   onMouseEnter?: () => void
   onMouseLeave?: () => void
 }
@@ -37,6 +39,7 @@ class Toast extends React.Component<IToastProps, IToastState> {
   private getRenderProps = (): IRenderProps => ({
     autoClose: this.props.autoClose,
     close: this.props.close,
+    closeOnClick: this.props.closeOnClick,
     isRunning: this.props.autoClose ? this.state.isRunning : null,
     pauseOnHover: this.props.pauseOnHover
   })
@@ -55,7 +58,7 @@ class Toast extends React.Component<IToastProps, IToastState> {
 
   render() {
     const renderProps = this.getRenderProps()
-    const { autoClose, close, pauseOnHover } = renderProps
+    const { autoClose, close, pauseOnHover, closeOnClick } = renderProps
     const { isRunning } = this.state
 
     let toastContainerProps: IToastContainerProps = {}
@@ -63,6 +66,10 @@ class Toast extends React.Component<IToastProps, IToastState> {
     if (autoClose && pauseOnHover) {
       toastContainerProps.onMouseEnter = this.pauseToast
       toastContainerProps.onMouseLeave = this.playToast
+    }
+
+    if (closeOnClick) {
+      toastContainerProps.onClick = close
     }
 
     return (
