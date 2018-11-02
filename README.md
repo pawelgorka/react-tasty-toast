@@ -8,13 +8,11 @@
 
 [x] - close on click
 
+[x] - progress bar example
+
 [ ] - render props for users custom components ( users progress bar ) - is playing - duration
 
-[ ] - working out of the box (pass default css class name that would be provided by default but not included by default)
-
 [ ] - remove toast programmatically
-
-[ ] - progress bar component with default styles
 
 1. Easy to setup for real, you can make it works in less than 10sec!
 2. Super easy to customize

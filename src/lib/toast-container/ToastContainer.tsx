@@ -28,6 +28,7 @@ class ToastContainer extends React.Component<IToastContainerProps, IToastContain
 
   componentDidMount() {
     this.props.eventManager.on(EventType.Show, this.onShowToast.bind(this))
+    this.props.eventManager.on(EventType.Hide, this.onHideToast.bind(this))
     this.props.eventManager.emit(EventType.ContainerDidMount, undefined)
   }
 

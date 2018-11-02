@@ -4,6 +4,7 @@ import { ToastService } from '../../src/lib/toast-service'
 import { IEventManager } from '../../src/lib/event-manager/event-manager'
 import { EventType } from '../../src/lib/events/events'
 import ToastOptionsBuilder from './toast-options.builder'
+import Builder from '../helpers/builder'
 
 describe('ToastService', () => {
   let toastService: ToastService
@@ -22,6 +23,14 @@ describe('ToastService', () => {
     eventManagerMock = new EventManagerMock()
 
     toastService = new ToastService(eventManagerMock)
+  })
+
+  it('should return unique toast id from show method', () => {
+    const toastId1 = toastService.show(() => <span>lorem</span>, optionsBuilder.build())
+    const toastId2 = toastService.show(() => <span>lorem</span>, optionsBuilder.build())
+    expect(toastId1).toBeDefined()
+    expect(toastId2).toBeDefined()
+    expect(toastId1).not.toEqual(toastId2)
   })
 
   it('should schedule show event if the toast container is not mounted yet', () => {
@@ -108,5 +117,22 @@ describe('ToastService', () => {
     toastService.show(() => <span>lorem 3 </span>, optionsBuilder.with('autoClose', false).build())
 
     expect(toastService.queue.length).toBe(2)
+  })
+
+  it('should hide toast that has already been shown by passing toastId to hide method', () => {
+    let emitMock = jest.fn()
+    let offMock = jest.fn()
+    let onMock = jest.fn()
+
+    let eventManagerBuilder = new Builder<IEventManager>()
+    eventManagerBuilder.with('emit', emitMock)
+    eventManagerBuilder.with('off', emitMock)
+    eventManagerBuilder.with('on', onMock)
+    let eventManager = eventManagerBuilder.build()
+    let toastService = new ToastService(eventManager)
+    const toastId1 = toastService.show(() => <span>lorem</span>, optionsBuilder.build())
+    expect(eventManager.emit).not.toHaveBeenCalled()
+    toastService.hide(toastId1)
+    expect(eventManager.emit).toHaveBeenCalledTimes(1)
   })
 })

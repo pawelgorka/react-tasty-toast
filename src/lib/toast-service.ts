@@ -1,7 +1,7 @@
 import { IShowToastOptions } from './toast-options'
 import { ToastFactoryFunction } from './toast.model'
 import EventManager, { IEventManager } from './event-manager/event-manager'
-import { EventType, IShowToastPayload } from './events/events'
+import { EventType, IShowToastPayload, IHideToastPayload } from './events/events'
 
 export interface IToastService {
   show: (content: any, options: IShowToastOptions) => {}
@@ -43,11 +43,13 @@ class ToastService {
   }
 
   show = (content: ToastFactoryFunction, options: IShowToastOptions) => {
+    const toastId = this.generateNextToastId()
+
     const showToastEventPayload = {
       content: content,
       options: {
         ...options,
-        toastId: this.generateNextToastId()
+        toastId
       }
     }
 
@@ -56,6 +58,12 @@ class ToastService {
     } else {
       this.queue.push(showToastEventPayload)
     }
+
+    return toastId
+  }
+
+  hide = (toastId: number) => {
+    this.eventManager.emit<IHideToastPayload>(EventType.Hide, { toastId })
   }
 }
 
