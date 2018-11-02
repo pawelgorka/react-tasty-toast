@@ -2,6 +2,8 @@ import * as React from 'react'
 
 import { ToastContainer, toastService } from 'react-tasty-toast'
 import { IShowToastOptions } from '../../dist/types/lib/toast-options'
+
+import ExampleProgressBar from './example-progress-bar/ExampleProgressBar'
 import ExampleToast from './example-toast/ExampleToast'
 
 // tslint:disable-next-line:no-empty-interface
@@ -29,7 +31,15 @@ class App extends React.Component<IAppProps, IAppState> {
       pauseOnHover: true
     }
 
-    toastService.show(({ close }) => <ExampleToast onClose={close} />, toastOptions)
+    toastService.show(({ close, getProgressIndicatorProps }) => {
+      const progressIndicatorProps = getProgressIndicatorProps()
+      return (
+        <React.Fragment>
+          <ExampleToast onClose={close} />
+          <ExampleProgressBar {...progressIndicatorProps} />
+        </React.Fragment>
+      )
+    }, toastOptions)
   }
 
   public handleAutoCloseInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {

@@ -6,10 +6,9 @@
 
 [x] - pause on hover
 
-[ ] - close on click
+[x] - close on click
 
 [ ] - render props for users custom components ( users progress bar ) - is playing - duration
-
 
 [ ] - working out of the box (pass default css class name that would be provided by default but not included by default)
 

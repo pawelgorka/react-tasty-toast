@@ -4,7 +4,6 @@
     min-height: 64px;
     -webkit-box-sizing: border-box;
     box-sizing: border-box;
-    margin-bottom: 1rem;
     padding: 8px;
     border-radius: 1px;
     box-shadow: 0 1px 10px 0 rgba(0, 0, 0, 0.1), 0 2px 15px 0 rgba(0, 0, 0, 0.05);
@@ -23,12 +22,6 @@
 .example-toast__toast-body {
     margin: auto 0;
     flex: 1 1;
-}
-
-@media only screen and (max-width: 480px) {
-    .example-toast__toast {
-        margin-bottom: 0;
-    }
 }
 
 .example-toast__close-button {

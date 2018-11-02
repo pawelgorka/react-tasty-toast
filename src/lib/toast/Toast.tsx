@@ -41,7 +41,12 @@ class Toast extends React.Component<IToastProps, IToastState> {
     close: this.props.close,
     closeOnClick: this.props.closeOnClick,
     isRunning: this.props.autoClose ? this.state.isRunning : null,
-    pauseOnHover: this.props.pauseOnHover
+    pauseOnHover: this.props.pauseOnHover,
+    getProgressIndicatorProps: () => ({
+      duration: this.props.autoClose ? this.props.autoClose : 0,
+      isRunning: this.props.autoClose ? this.state.isRunning : null,
+      isVisible: true
+    })
   })
 
   pauseToast = () => {
